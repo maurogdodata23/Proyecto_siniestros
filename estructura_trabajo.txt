@@ -1,0 +1,23 @@
+Portada
+--Título del proyecto
+---Descripcion breve de dataset
+
+<objetivos del dashboard
+--Filtros globales
+./--Filtros (Culpa del conductor)
+./--Filtro de metrica cuantitativa (Ocurrieron en el dep de antioquia)
+./--Filtro de categoria (tipo de vehiculo)
+
+KPIs
+---Total de registros
+---Metrica principal
+---Otras metricas relevantes
+
+Vista de tabla
+---Tabla de columna clave
+---Selector de un registro para ver detalle
+
+**Graficos**
+---Distribucion de una variable metrica (histograma/bar chart)
+---Evolucion temporal (line chart por año/mes)
+
