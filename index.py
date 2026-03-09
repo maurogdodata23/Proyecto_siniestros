@@ -13,10 +13,8 @@ imagen3 = plt.imread(imagen)
 plt.imshow(imagen3)
 plt.axis('off')
 
-
- -----------------------------------------------------------
 # CONFIGURACIÓN BÁSICA
-# -----------------------------------------------------------
+
 st.set_page_config(page_title="Análisis de Siniestros", page_icon=":⚠️:", layout="wide")
 
 st.title("⚠️ Analisis de Siniestros Nacionales")
@@ -27,9 +25,7 @@ st.write("""Este dashboard está construido sobre el dataset **games.csv**.
 st.markdown("Este proyecto analiza los siniestros nacionales utilizando un conjunto de datos aleatorio. A continuación, se presentan algunos gráficos y análisis basados en los datos disponibles.")
 st.image(imagen3, caption="Análisis de Siniestros", use_column_width=True)
 
-# -----------------------------------------------------------
 # CARGA Y PREPARACIÓN DE DATOS
-# -----------------------------------------------------------
 
 @st.cache_data
 def load_data(path: str = "games.csv") -> pd.DataFrame:
@@ -58,9 +54,7 @@ df = load_data()
 
 st.sidebar.success("Datos cargados correctamente.")
 
-# -----------------------------------------------------------
 # BARRA LATERAL – FILTROS
-# -----------------------------------------------------------
 
 st.sidebar.header("Filtros")
 
@@ -99,17 +93,14 @@ if year_min is not None:
 
 if genres_selected:
     mask &= df["Genres_list"].apply(
-        lambda lst: any(g in lst for g in genres_selected) if isinstance(lst, list) else False
-    )
+        lambda lst: any(g in lst for g in genres_selected) if isinstance(lst, list) else False)
 
 df_filtered = df[mask]
 
 st.subheader("Datos filtrados")
 st.write(f"Juegos filtrados: **{len(df_filtered)}**")
 
-# -----------------------------------------------------------
 # KPIs PRINCIPALES
-# -----------------------------------------------------------
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -119,26 +110,21 @@ with col1:
 with col2:
     st.metric(
         "Rating promedio",
-        f"{df_filtered['Rating'].mean():.2f}" if len(df_filtered) > 0 else "N/A",
-    )
+        f"{df_filtered['Rating'].mean():.2f}" if len(df_filtered) > 0 else "N/A",)
 
 with col3:
     st.metric(
         "Nº medio de reseñas",
-        f"{df_filtered['Number of Reviews'].mean():.1f}" if "Number of Reviews" in df_filtered.columns and len(df_filtered) > 0 else "N/A",
-    )
+        f"{df_filtered['Number of Reviews'].mean():.1f}" if "Number of Reviews" in df_filtered.columns and len(df_filtered) > 0 else "N/A",)
 
 with col4:
     st.metric(
         "Veces listados (media)",
-        f"{df_filtered['Times Listed'].mean():.1f}" if "Times Listed" in df_filtered.columns and len(df_filtered) > 0 else "N/A",
-    )
+        f"{df_filtered['Times Listed'].mean():.1f}" if "Times Listed" in df_filtered.columns and len(df_filtered) > 0 else "N/A",)
 
 st.markdown("---")
 
-# -----------------------------------------------------------
 # TABLA PRINCIPAL Y DETALLE
-# -----------------------------------------------------------
 
 st.subheader("Tabla de juegos")
 
@@ -159,8 +145,7 @@ st.markdown("### Detalle de un juego")
 if len(df_filtered) > 0:
     title_selected = st.selectbox(
         "Selecciona un título",
-        options=df_filtered["Title"].sort_values().unique(),
-    )
+        options=df_filtered["Title"].sort_values().unique(),)
 
     game = df_filtered[df_filtered["Title"] == title_selected].iloc[0]
 
@@ -180,9 +165,7 @@ else:
 
 st.markdown("---")
 
-# -----------------------------------------------------------
 # GRÁFICOS
-# -----------------------------------------------------------
 
 st.subheader("Distribución de ratings")
 if len(df_filtered) > 0:
@@ -207,9 +190,7 @@ else:
 
 st.markdown("---")
 
-# -----------------------------------------------------------
 # SECCIÓN PARA LA CLASE
-# -----------------------------------------------------------
 
 st.markdown("## Guía para estudiantes")
 st.markdown(
