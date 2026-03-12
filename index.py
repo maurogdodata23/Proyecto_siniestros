@@ -7,199 +7,28 @@ import seaborn as sns
 import streamlit as st
 
 ruta = "https://github.com/maurogdodata23/Proyecto_siniestros/raw/refs/heads/main/Siniestros_nacionales_aleatorio_trim6.csv"
-df = pd.read_csv(ruta, encoding='latin-1')
-imagen = "imagen1.png"
-imagen3 = plt.imread(imagen)
-plt.imshow(imagen3)
-plt.axis('off')
+df = pd.read_csv(ruta, encoding='latin-1', on_bad_lines="skip", sep=';')
+
 
 # CONFIGURACIÓN BÁSICA
 
 st.set_page_config(page_title="Análisis de Siniestros", page_icon=":⚠️:", layout="wide")
 
 st.title("⚠️ Analisis de Siniestros Nacionales")
-st.write("""Este dashboard está construido sobre el dataset **games.csv**.
-    Es un ejemplo de proyecto final que tus estudiantes pueden replicar
-    con sus propios datos, cambiando nombres de columnas y el archivo CSV.
-    """)
-st.markdown("Este proyecto analiza los siniestros nacionales utilizando un conjunto de datos aleatorio. A continuación, se presentan algunos gráficos y análisis basados en los datos disponibles.")
+st.write("""En el contexto de la seguridad vial y la prevención de accidentes, el análisis de siniestros nacionales representa una herramienta fundamental para comprender las dinámicas que afectan a la sociedad. Este estudio se basa en un conjunto de datos aleatorios que abarca diversos aspectos de los incidentes viales, incluyendo causas, ubicaciones geográficas, condiciones climáticas y perfiles de los involucrados. A través de técnicas de análisis de datos y visualizaciones interactivas, se busca identificar patrones recurrentes, tendencias temporales y factores de riesgo que contribuyan a la ocurrencia de estos eventos. El objetivo principal es proporcionar insights accionables que permitan a las autoridades y la comunidad implementar estrategias efectivas para reducir la incidencia de siniestros, promoviendo así una cultura de responsabilidad y seguridad en las vías públicas. Este enfoque no solo facilita la toma de decisiones informadas, sino que también fomenta la conciencia colectiva sobre la importancia de la prevención en la reducción de pérdidas humanas y económicas.    """)
+##st.markdown("Este proyecto analiza los siniestros nacionales utilizando un conjunto de datos aleatorio. A continuación, se presentan algunos gráficos y análisis basados en los datos disponibles.")
+imagen = "imagen1.png"
+imagen3 = plt.imread(imagen)
+plt.imshow(imagen3)
+plt.axis('off')
 st.image(imagen3, caption="Análisis de Siniestros", use_column_width=True)
 
+# -----------------------------------------------------------
 # CARGA Y PREPARACIÓN DE DATOS
+# -----------------------------------------------------------
 
 @st.cache_data
-def load_data(path: str = "games.csv") -> pd.DataFrame:
+def load_data(path: str = "Siniestros_nacionales_aleatorio_trim6.csv") -> pd.DataFrame:
     df = pd.read_csv(path)
 
-    # 🔹 Ajusta estos nombres si tu CSV tiene otros distintos
-    # Fecha de lanzamiento → datetime + año
-    df["Release Date"] = pd.to_datetime(df["Release Date"], errors="coerce")
-    df["Year"] = df["Release Date"].dt.year
-
-    # Rating a numérico
-    df["Rating"] = pd.to_numeric(df["Rating"], errors="coerce")
-
-    # Géneros como lista
-    df["Genres_list"] = (
-        df["Genres"]
-        .astype(str)
-        .str.strip("[]")
-        .str.replace("'", "", regex=False)
-        .str.split(", ")
-    )
-
-    return df
-
-df = load_data()
-
-st.sidebar.success("Datos cargados correctamente.")
-
-# BARRA LATERAL – FILTROS
-
-st.sidebar.header("Filtros")
-
-# Filtro por año
-years = sorted(df["Year"].dropna().unique())
-if years:
-    year_min, year_max = st.sidebar.select_slider(
-        "Rango de año de lanzamiento",
-        options=years,
-        value=(min(years), max(years)),
-    )
-else:
-    year_min, year_max = None, None
-
-# Filtro por rating mínimo
-rating_min = st.sidebar.slider(
-    "Rating mínimo",
-    float(df["Rating"].min()),
-    float(df["Rating"].max()),
-    float(df["Rating"].median()),
-)
-
-# Filtro por género
-all_genres = sorted({g for lst in df["Genres_list"].dropna() for g in lst})
-genres_selected = st.sidebar.multiselect(
-    "Géneros",
-    options=all_genres,
-    default=[],
-)
-
-# Aplicar filtros
-mask = df["Rating"] >= rating_min
-
-if year_min is not None:
-    mask &= (df["Year"] >= year_min) & (df["Year"] <= year_max)
-
-if genres_selected:
-    mask &= df["Genres_list"].apply(
-        lambda lst: any(g in lst for g in genres_selected) if isinstance(lst, list) else False)
-
-df_filtered = df[mask]
-
-st.subheader("Datos filtrados")
-st.write(f"Juegos filtrados: **{len(df_filtered)}**")
-
-# KPIs PRINCIPALES
-
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.metric("Total de juegos", len(df_filtered))
-
-with col2:
-    st.metric(
-        "Rating promedio",
-        f"{df_filtered['Rating'].mean():.2f}" if len(df_filtered) > 0 else "N/A",)
-
-with col3:
-    st.metric(
-        "Nº medio de reseñas",
-        f"{df_filtered['Number of Reviews'].mean():.1f}" if "Number of Reviews" in df_filtered.columns and len(df_filtered) > 0 else "N/A",)
-
-with col4:
-    st.metric(
-        "Veces listados (media)",
-        f"{df_filtered['Times Listed'].mean():.1f}" if "Times Listed" in df_filtered.columns and len(df_filtered) > 0 else "N/A",)
-
-st.markdown("---")
-
-# TABLA PRINCIPAL Y DETALLE
-
-st.subheader("Tabla de juegos")
-
-cols_tabla = [
-    "Title",
-    "Year",
-    "Rating",
-    "Times Listed",
-    "Number of Reviews",
-    "Genres",
-]
-cols_tabla = [c for c in cols_tabla if c in df_filtered.columns]
-
-st.dataframe(df_filtered[cols_tabla], use_container_width=True)
-
-st.markdown("### Detalle de un juego")
-
-if len(df_filtered) > 0:
-    title_selected = st.selectbox(
-        "Selecciona un título",
-        options=df_filtered["Title"].sort_values().unique(),)
-
-    game = df_filtered[df_filtered["Title"] == title_selected].iloc[0]
-
-    st.markdown(f"#### {game['Title']} ({int(game['Year']) if pd.notna(game['Year']) else 'N/A'})")
-    st.write(f"**Rating:** {game['Rating']}")
-    st.write(f"**Géneros:** {game['Genres']}")
-    if "Times Listed" in game:
-        st.write(f"**Times Listed:** {game['Times Listed']}")
-    if "Number of Reviews" in game:
-        st.write(f"**Number of Reviews:** {game['Number of Reviews']}")
-    if "Plays" in game:
-        st.write(f"**Plays:** {game['Plays']}")
-    if "Playing" in game:
-        st.write(f"**Playing:** {game['Playing']}")
-else:
-    st.info("No hay juegos que cumplan los filtros actuales.")
-
-st.markdown("---")
-
-# GRÁFICOS
-
-st.subheader("Distribución de ratings")
-if len(df_filtered) > 0:
-    st.bar_chart(df_filtered["Rating"].value_counts().sort_index())
-else:
-    st.write("Sin datos para mostrar.")
-
-st.subheader("Número de juegos por año")
-if "Year" in df_filtered.columns and df_filtered["Year"].notna().any():
-    games_per_year = df_filtered.groupby("Year")["Title"].count()
-    st.line_chart(games_per_year)
-else:
-    st.write("No hay años disponibles tras filtrar.")
-
-st.subheader("Top géneros")
-if len(df_filtered) > 0:
-    genres_expanded = df_filtered.explode("Genres_list")
-    top_genres = genres_expanded["Genres_list"].value_counts().head(15)
-    st.bar_chart(top_genres)
-else:
-    st.write("No hay géneros disponibles tras filtrar.")
-
-st.markdown("---")
-
-# SECCIÓN PARA LA CLASE
-
-st.markdown("## Guía para estudiantes")
-st.markdown(
-    """
-- Este dashboard es un **ejemplo**. Para tu proyecto final:
-    - Cambia `games.csv` por tu propio archivo.
-    - Ajusta las columnas usadas: fecha, métricas numéricas, categorías.
-    - Mantén la estructura: filtros, KPIs, tabla, gráficos y conclusiones.
-- Añade una sección con **tus propias conclusiones** sobre tu dataset.
-"""
-)
-
+    ##2:03:00
