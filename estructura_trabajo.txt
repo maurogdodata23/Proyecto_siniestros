@@ -90,7 +90,8 @@ st.write(
 # -----------------------------------------------------------
 # CARGA Y PREPARACIÓN DE DATOS
 # -----------------------------------------------------------
-
+  ##ruta = "https://github.com/maurogdodata23/Proyecto_siniestros/raw/refs/heads/main/Siniestros_nacionales_aleatorio_trim6.csv"
+    ##df = pd.read_csv(ruta, encoding='latin-1', on_bad_lines="skip", sep=';')
 @st.cache_data
 def load_data(path: str = "games.csv") -> pd.DataFrame:
     df = pd.read_csv(path)
