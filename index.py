@@ -12,9 +12,13 @@ import streamlit as st
 st.set_page_config(page_title="Análisis de Siniestros", page_icon=":⚠️:", layout="wide")
 st.title("⚠️ Analisis de Siniestros Nacionales")
 
-@st.cache_data
-
-st.write("""En el contexto de la seguridad vial y la prevención de accidentes, el análisis de siniestros nacionales representa una herramienta fundamental para comprender las dinámicas que afectan a la sociedad. Este estudio se basa en un conjunto de datos aleatorios que abarca diversos aspectos de los incidentes viales, incluyendo causas, ubicaciones geográficas, condiciones climáticas y perfiles de los involucrados. A través de técnicas de análisis de datos y visualizaciones interactivas, se busca identificar patrones recurrentes, tendencias temporales y factores de riesgo que contribuyan a la ocurrencia de estos eventos. El objetivo principal es proporcionar insights accionables que permitan a las autoridades y la comunidad implementar estrategias efectivas para reducir la incidencia de siniestros, promoviendo así una cultura de responsabilidad y seguridad en las vías públicas. Este enfoque no solo facilita la toma de decisiones informadas, sino que también fomenta la conciencia colectiva sobre la importancia de la prevención en la reducción de pérdidas humanas y económicas.    """)
+st.write("""En el contexto de la seguridad vial y la prevención de accidentes, el análisis de siniestros
+          nacionales representa una herramienta fundamental para comprender las dinámicas que afectan a
+          la sociedad. Este estudio se basa en un conjunto de datos aleatorios que 
+         abarca diversos aspectos de los incidentes viales, incluyendo causas, ubicaciones geográficas, 
+         condiciones climáticas y perfiles de los involucrados. A través de técnicas de análisis de datos 
+         y visualizaciones interactivas, se busca identificar patrones recurrentes, tendencias temporales
+          y factores de riesgo que contribuyan a la ocurrencia de estos eventos.""")
 
 #Lectura dataset
 def cargar_datos():

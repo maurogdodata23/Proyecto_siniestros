@@ -21,39 +21,6 @@ Vista de tabla
 ---Distribucion de una variable metrica (histograma/bar chart)
 ---Evolucion temporal (line chart por año/mes)
 
-Estructura que deben replicar
-
-Portada
---Título del proyecto.
---Descripción breve del dataset.
-
-Objetivos del dashboard.*
---Filtros globales
-./--Filtro de tiempo (año/fecha). 
-./--Filtro de una métrica cuantitativa (rating, precio, ventas).
-./-Filtro de una categoría (género, país, producto).
-
-KPIs
----Total de registros (juegos, ventas, clientes…).
----Métrica principal promedio (rating medio, ingreso medio, etc.).
----Otra métrica relevante (nº reseñas, total ventas…).
-
-Vista de tabla
----Tabla con columnas clave.
----Selector de un registro para ver detalle (como tu “detalle de juego”).
-
-**Gráficos**
----Distribución de una variable numérica (histograma / bar chart).
----Evolución temporal (line chart por año/mes).
----Top categorías (bar chart de géneros/países/tipos).
-
-Conclusiones
-
-3–5 hallazgos clave del análisis.
-
-1–2 recomendaciones.
-
-
 
 
 
@@ -632,5 +599,11 @@ st.markdown(
 - Añade una sección con **tus propias conclusiones** sobre tu dataset.
 """
 )
+El objetivo principal es proporcionar insights accionables que permitan a las autoridades y la
+ comunidad implementar estrategias efectivas para reducir la incidencia de siniestros, 
+ promoviendo así una cultura de responsabilidad y seguridad en las vías públicas. 
+ Este enfoque no solo facilita la toma de decisiones informadas, sino que también fomenta la 
+ conciencia colectiva sobre la importancia de la prevención en la reducción de pérdidas humanas y 
+ económicas.    """)
 
 
